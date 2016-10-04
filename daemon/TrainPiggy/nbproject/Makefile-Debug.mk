@@ -43,8 +43,8 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=-lcurlpp -lcurl -std=gnu++11
-CXXFLAGS=-lcurlpp -lcurl -std=gnu++11
+CCFLAGS=-lcurlpp -lcurl -std=gnu++11 -lpthread
+CXXFLAGS=-lcurlpp -lcurl -std=gnu++11 -lpthread
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -61,17 +61,17 @@ LDLIBSOPTIONS=
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/trainpiggy: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/trainpiggy ${OBJECTFILES} ${LDLIBSOPTIONS} -lcurlpp -lcurl -std=gnu++11
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/trainpiggy ${OBJECTFILES} ${LDLIBSOPTIONS} -lcurlpp -lcurl -std=gnu++11 -lpthread
 
 ${OBJECTDIR}/gpio.o: gpio.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -DMOCK -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/gpio.o gpio.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/gpio.o gpio.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -DMOCK -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:

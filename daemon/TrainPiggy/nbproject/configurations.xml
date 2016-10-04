@@ -32,19 +32,16 @@
   <confs>
     <conf name="Debug" type="1">
       <toolsSet>
-        <compilerSet>default</compilerSet>
+        <compilerSet>GNU|GNU</compilerSet>
         <dependencyChecking>true</dependencyChecking>
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
         <ccTool>
-          <commandLine>-lcurlpp -lcurl -std=gnu++11</commandLine>
-          <preprocessorList>
-            <Elem>MOCK</Elem>
-          </preprocessorList>
+          <commandLine>-lcurlpp -lcurl -std=gnu++11 -lpthread</commandLine>
         </ccTool>
         <linkerTool>
-          <commandLine>-lcurlpp -lcurl -std=gnu++11</commandLine>
+          <commandLine>-lcurlpp -lcurl -std=gnu++11 -lpthread</commandLine>
         </linkerTool>
       </compileType>
       <item path="README.md" ex="false" tool="3" flavor2="0">

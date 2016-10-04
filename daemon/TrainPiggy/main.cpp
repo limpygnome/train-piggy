@@ -21,7 +21,6 @@ using json = nlohmann::json;
 
 #include "gpio.cpp"
 
-
 void logCancellation(json item)
 {
     string time;
@@ -133,16 +132,19 @@ bool checkStations()
 
 void setEyeLights(bool cancellations)
 {
-#ifndef MOCK
-    GPIOWrite(POUT, cancellations);
-#else
+#ifdef MOCK
     cout << "Mock set lights to: " << cancellations << endl;
+#else
+    GPIOWrite(POUT, cancellations);
+    cout << "Set lights to: " << cancellations << endl;
 #endif
 }
 
 int setupEyeLights()
 {
-#ifndef MOCK
+#ifdef MOCK
+    cout << "Mock setup lights" << endl;
+#else
     // Setup GPIO
     if (GPIOExport(POUT))
     {
@@ -154,8 +156,6 @@ int setupEyeLights()
         cout << "Failed to set direction of GPIO" << endl;
         return 2;
     }
-#else
-    cout << "Mock setup lights" << endl;
 #endif
     // Set eyes to off initially
     setEyeLights(false);
@@ -163,9 +163,44 @@ int setupEyeLights()
     return 0;
 }
 
+// Function for blinking lights, ran as separate thread
+bool cancellations;
+void lightsThreadMain()
+{
+    cout << "Started lights thread..." << endl;
+
+    // Flash lights initially as test
+    for (int i = 0; i < 5; i++)
+    {
+        this_thread::sleep_for(chrono::seconds(1));
+        setEyeLights(true);
+        this_thread::sleep_for(chrono::seconds(1));
+        setEyeLights(false);
+    }
+    
+    // Loop forever, watching shared var...
+    bool blinkPreviousState = false;
+    while (true)
+    {
+        if (cancellations)
+        {
+            // Invert previous state and use to toggle eye lights
+            blinkPreviousState = !blinkPreviousState;
+            setEyeLights(blinkPreviousState);
+        }
+        else if (blinkPreviousState != cancellations)
+        {
+            // Need to turn LEDs off...
+            blinkPreviousState = false;
+            setEyeLights(false);
+        }
+        
+        this_thread::sleep_for(chrono::seconds(2));
+    }
+}
+
 int main(int argc, char** argv)
 {
-    bool cancellations;
     bool previousState;
     
     // Setup eyes
@@ -174,6 +209,9 @@ int main(int argc, char** argv)
     {
         return setup;
     }
+    
+    // Startup lights thread
+    thread threadLights(lightsThreadMain);
 
     // Forever poll the status of stations...
     while (true)
@@ -190,7 +228,7 @@ int main(int argc, char** argv)
         
         // Sleep...
         cout << "Done, sleeping..." << endl;
-        std::this_thread::sleep_for(std::chrono::seconds(60));
+        this_thread::sleep_for(chrono::seconds(60));
     }
     
     return 0;
