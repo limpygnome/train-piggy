@@ -1,11 +1,9 @@
 #include <cstdlib>
 #include <stdio.h>
 
-
 #include <iostream>
 #include <sstream>
 using namespace std;
-
 
 #include <curlpp/cURLpp.hpp>
 #include <curlpp/Easy.hpp>

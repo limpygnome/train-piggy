@@ -1,19 +1,26 @@
+# Setup
+## Requirements
+- make / g++ / gcc - 4.9 and above
 
-install curl.h:
+## Dependencies
+Install curl.h (cURL library):
+````
 sudo apt-get install libcurl4-openssl-dev
+````
 
-install curl wrapper:
+Install cURL C++ wrapper:
+````
 sudo apt-get install libcurlpp-dev
+````
 
-add to g++ and linker:
--lcurlpp -lcurl
+## IDE / Compiler
+Add flags to g++ and linker:
+````
+-lcurlpp -lcurl -std=gnu++11 -lpthread
+````
 
+# Building, Installation and Distribution
 
-
-
-json library
--------------
-add to g++ and linker to enable C++ 11:
--std=gnu++11
-
-also needs g++ 4.9 and above...
+````
+make
+````
